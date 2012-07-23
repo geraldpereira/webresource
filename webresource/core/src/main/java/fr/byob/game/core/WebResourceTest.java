@@ -11,9 +11,11 @@ import playn.core.util.Callback;
 public class WebResourceTest implements Game {
 
 	protected final WebResource webResource;
+	protected final Base64 base64;
 
-	public WebResourceTest(final WebResource webResource) {
+	public WebResourceTest(final WebResource webResource, final Base64 base64) {
 		this.webResource = webResource;
+		this.base64 = base64;
 	}
 
 	@Override
@@ -23,24 +25,13 @@ public class WebResourceTest implements Game {
 		ImageLayer bgLayer = graphics().createImageLayer(bgImage);
 		graphics().rootLayer().add(bgLayer);
 
-		// webResource.url(
-		// "http://gae-server-rest.appspot.com/api/v1.0/car/get/4001")
-		// .get(new Callback<String>() {
-		//
-		// @Override
-		// public void onSuccess(String result) {
-		// PlayN.log().info(result);
-		// }
-		//
-		// @Override
-		// public void onFailure(Throwable cause) {
-		// PlayN.log().info("Chier !", cause);
-		// }
-		// });
+		// final String url = "http://gae-server-rest.appspot.com/api/v1.0/";
+		final String url = "http://localhost:10080/v1.0/";
 
-		webResource.url("http://gae-server-rest.appspot.com/api/v1.0/car/add")
-				.data("{\"vin\":\"vinvinTest\",\"color\":20}")
-				.post(new Callback<String>() {
+		webResource.url(url + "car/get/4001")
+				.header("authorization",
+						"Basic " + base64.encode("rest-user:pasbon"))
+				.get(new Callback<String>() {
 
 					@Override
 					public void onSuccess(String result) {
@@ -53,11 +44,10 @@ public class WebResourceTest implements Game {
 					}
 				});
 
-
-
-// PlayN.net().get(
-		// "http://gae-server-rest.appspot.com/api/v1.0/car/get/4001",
-		// new Callback<String>() {
+		// webResource.url(url + "car/add")
+		// .data("{\"vin\":\"vinvinTest\",\"color\":20}")
+		// .header("authorization", "Basic "+base64.encode("rest-user:pasbon"))
+		// .post(new Callback<String>() {
 		//
 		// @Override
 		// public void onSuccess(String result) {

@@ -11,6 +11,7 @@ public class WebResourceTestHtml extends HtmlGame {
   public void start() {
     HtmlPlatform platform = HtmlPlatform.register();
     platform.assets().setPathPrefix("webresource/");
-		PlayN.run(new WebResourceTest(new HtmlWebResource(platform)));
+		PlayN.run(new WebResourceTest(new HtmlWebResource(platform),
+				new HtmlBase64()));
   }
 }

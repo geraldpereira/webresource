@@ -9,6 +9,7 @@ public class WebResourceTestJava {
   public static void main(String[] args) {
     JavaPlatform platform = JavaPlatform.register();
     platform.assets().setPathPrefix("fr/byob/game/resources");
-		PlayN.run(new WebResourceTest(new JavaWebResource(platform)));
+		PlayN.run(new WebResourceTest(new JavaWebResource(platform),
+				new JavaBase64()));
   }
 }

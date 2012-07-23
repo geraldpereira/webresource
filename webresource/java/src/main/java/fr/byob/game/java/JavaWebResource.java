@@ -1,13 +1,11 @@
 package fr.byob.game.java;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLConnection;
 import java.util.Map.Entry;
 
 import playn.core.Platform;
@@ -28,15 +26,23 @@ public class JavaWebResource extends WebResourceImpl {
 			@Override
 			public void run() {
 				try {
+					// open url connection
 					URL url = new URL(JavaWebResource.this.url);
-					URLConnection conn = url.openConnection();
+					HttpURLConnection con = (HttpURLConnection) url
+							.openConnection();
+
+					// set up url connection to get retrieve information back
+					con.setRequestMethod("GET");
+					con.setDoInput(true);
+
 					for (Entry<String, String> header : headers.entrySet()) {
-						conn.setRequestProperty(header.getKey(),
+						con.setRequestProperty(header.getKey(),
 								header.getValue());
 					}
-					InputStream stream = url.openStream();
-					InputStreamReader reader = new InputStreamReader(stream);
-					notifySuccess(callback, readFully(reader));
+					String result = readFully(new InputStreamReader(
+							con.getInputStream()));
+					con.disconnect();
+					notifySuccess(callback, result);
 				} catch (MalformedURLException e) {
 					notifyFailure(callback, e);
 				} catch (IOException e) {
@@ -93,4 +99,5 @@ public class JavaWebResource extends WebResourceImpl {
 		}
 		return result.toString();
 	}
+
 }
